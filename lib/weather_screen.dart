@@ -21,7 +21,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<Map<String, dynamic>> getWeather() async {
     try {
       const uri =
-          "https://api.openweathermap.org/data/2.5/forecast?q=India&APPID=e69635933445698052ec12ea74a479bf";
+          "https://api.openweathermap.org/data/2.5/forecast?q=London,uk&APPID=e69635933445698052ec12ea74a479bf";
       final response = await http.get(Uri.parse(uri));
       final jsonData = jsonDecode(response.body);
 
@@ -74,7 +74,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
               final data = snapshot.data!;
               final currentSky = data["list"][0];
-              final temp = currentSky["main"]["temp"] - 273.15;
+              final temp = currentSky["main"]["temp"];
               final currentWeather = currentSky["weather"][0]['main'];
               final humidity = currentSky["main"]["humidity"];
               final pressure = currentSky["main"]["pressure"];
@@ -104,7 +104,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      "${formatter.format(temp)}° C",
+                                      "${formatter.format(temp)}° K",
                                       style: const TextStyle(fontSize: 32),
                                     ),
                                     currentWeather == "Clouds" ||
@@ -138,26 +138,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       const SizedBox(
                         height: 16,
                       ),
-                      // SingleChildScrollView(
-                      //   scrollDirection: Axis.horizontal,
-                      //   child: Row(
-                      //     children: [
-                      //       for (int i = 1; i < 35; i++)
-                      //         CardWidget(
-                      //             icon: data["list"][i]["weather"][0]['main'] ==
-                      //                         "Clouds" ||
-                      //                     data["list"][i]["weather"][0]
-                      //                             ['main'] ==
-                      //                         "Rain"
-                      //                 ? Icons.cloud
-                      //                 : Icons.sunny,
-                      //             temperature: data["list"][i]["main"]['temp']
-                      //                 .toString(),
-                      //             time: data['list'][i]['dt'].toString())
-                      //     ],
-                      //   ),
-                      // ),
-
                       SizedBox(
                         height: 130,
                         child: ListView.builder(
@@ -167,9 +147,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             itemBuilder: (context, index) {
                               final currentTime = DateTime.parse(
                                   data["list"][index + 1]['dt_txt']);
-                              final hourslydata = data["list"][index + 1]
-                                      ["main"]['temp'] -
-                                  273.15;
+                              final hourslydata =
+                                  data["list"][index + 1]["main"]['temp'];
 
                               return CardWidget(
                                   icon: data["list"][index + 1]["weather"][0]
@@ -181,7 +160,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       ? Icons.cloud
                                       : Icons.sunny,
                                   temperature:
-                                      "${formatter.format(hourslydata)}°",
+                                      "${formatter.format(hourslydata)}° K",
                                   time: DateFormat.j()
                                       .format(currentTime)
                                       .toString());
